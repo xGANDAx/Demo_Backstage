@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: backstage
-          image: ghcr.io/xgandax/backstage-app:a1489d31aba4e63ac65fc7a72c130c6e6ac4f685
+          image: placeholder
           ports:
             - containerPort: 7007
           env:
@@ -40,6 +40,26 @@ spec:
                 secretKeyRef:
                   name: postgres-secret
                   key: POSTGRES_DB
+            - name: AUTH_GOOGLE_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: google-secrets
+                  key: AUTH_GOOGLE_CLIENT_ID            
+            - name: AUTH_GOOGLE_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: google-secrets
+                  key: AUTH_GOOGLE_CLIENT_SECRET            
+            - name: GCS_CLIENT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: google-secrets
+                  key: GCS_CLIENT_EMAIL            
+            - name: GCS_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: google-secrets
+                  key: GCS_PRIVATE_KEY
           readinessProbe:
             httpGet:
               path: /healthcheck

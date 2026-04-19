@@ -63,6 +63,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Deploy Secrets
+        run: |
+          chmod +x k8s/secrets.sh
+          ./k8s/secrets.sh
       - name: Deploy
         run: |
           chmod +x k8s/deploy.sh
