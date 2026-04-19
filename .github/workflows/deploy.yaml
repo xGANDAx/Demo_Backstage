@@ -1,0 +1,69 @@
+name: Build & Deploy Backstage
+
+on:
+  push:
+    branches: [ main ]
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: backstage-app
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    outputs:
+      image: ${{ steps.tag_image.outputs.image }}
+    permissions:
+      contents: read
+      packages: write  # ESTO ES LO QUE FALTA
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Tools
+        run: |
+          sudo apt update
+          sudo apt install -y python3 make g++ build-essential
+
+      - name: Enable Corepack (Yarn 4)
+        run: corepack enable
+
+      - name: Install deps
+        run: yarn install --immutable
+
+      - name: Build Docker image
+        run: |
+          yarn build:all
+          yarn build-image
+
+      - name: Tag image
+        id: tag_image
+        run: |
+          IMAGE=ghcr.io/xgandax/backstage-app:${{ github.sha }}
+          docker tag backstage $IMAGE
+          echo "IMAGE=$IMAGE" >> $GITHUB_ENV  
+          echo "image=$IMAGE" >> $GITHUB_OUTPUT  
+
+      - name: Login to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u xgandax --password-stdin
+
+      - name: Push image
+        run: |
+          docker push $IMAGE
+
+  deploy:
+    runs-on: self-hosted
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Deploy
+        run: |
+          chmod +x k8s/deploy.sh
+          ./k8s/deploy.sh ${{ needs.build.outputs.image }}
