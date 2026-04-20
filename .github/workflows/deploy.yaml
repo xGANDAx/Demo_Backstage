@@ -64,6 +64,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v6
       - name: Deploy Secrets
+        env:
+          AUTH_GOOGLE_CLIENT_ID: ${{ secret.AUTH_GOOGLE_CLIENT_ID }}
+          AUTH_GOOGLE_CLIENT_SECRET: ${{ secret.AUTH_GOOGLE_CLIENT_SECRET }}
+          GCS_CLIENT_EMAIL: ${{ secret.GCS_CLIENT_EMAIL }}
+          GCS_PRIVATE_KEY: ${{ secret.GCS_PRIVATE_KEY }}
         run: |
           chmod +x k8s/secrets.sh
           ./k8s/secrets.sh
