@@ -12,7 +12,7 @@
 # Alternatively, there is also a multi-stage Dockerfile documented here:
 # https://backstage.io/docs/deployment/docker#multi-stage-build
 
-FROM node:24-trixie-slim
+FROM node:24-bullseye
 
 # Set Python interpreter for `node-gyp` to use
 ENV PYTHON=/usr/bin/python3
@@ -24,21 +24,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y --no-install-recommends python3 g++ build-essential python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-      python3 \
-      python3-pip \
-      python3-dev \
-      build-essential \
-      gcc \
-      g++ \
-      libffi-dev \
-      libssl-dev \
-      libxml2-dev \
-      libxslt1-dev \
-      zlib1g-dev \
-    && pip3 install --no-cache-dir mkdocs mkdocs-techdocs-core \
-    && rm -rf /var/lib/apt/lists/*
+RUN pip3 install --no-cache-dir mkdocs mkdocs-techdocs-core -v
 
 # Install sqlite3 dependencies. You can skip this if you don't use sqlite3 in the image,
 # in which case you should also move better-sqlite3 to "devDependencies" in package.json.
