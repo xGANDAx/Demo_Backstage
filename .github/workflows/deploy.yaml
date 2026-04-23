@@ -73,7 +73,8 @@ jobs:
           GCS_CLIENT_EMAIL: ${{ secrets.GCS_CLIENT_EMAIL }}
           GCS_PRIVATE_KEY: ${{ secrets.GCS_PRIVATE_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          USER: demo-xgandax-org
+          K3S_GITHUB_TOKEN: ${{ secrets.K3S_GITHUB_TOKEN }}
+          USER: xgandax
         run: |
           chmod +x k8s/secrets.sh
           ./k8s/secrets.sh
