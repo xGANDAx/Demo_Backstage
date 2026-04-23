@@ -22,9 +22,9 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     --mount=type=cache,target=/var/lib/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends python3 g++ build-essential python3-pip && \
-    rm -rf /var/lib/apt/lists/* && \
-    pip3 install mkdocs mkdocs-techdocs-core && \
-    apt-get clean
+    rm -rf /var/lib/apt/lists/*
+
+RUN pip3 install --no-cache-dir mkdocs mkdocs-techdocs-core
 
 # Install sqlite3 dependencies. You can skip this if you don't use sqlite3 in the image,
 # in which case you should also move better-sqlite3 to "devDependencies" in package.json.
