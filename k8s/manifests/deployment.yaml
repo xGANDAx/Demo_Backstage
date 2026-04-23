@@ -13,6 +13,8 @@ spec:
       labels:
         app: backstage
     spec:
+      imagePullSecrets:
+        - name: ghcr-secret
       containers:
         - name: backstage
           image: placeholder
