@@ -15,7 +15,7 @@ jobs:
       image: ${{ steps.tag_image.outputs.image }}
     permissions:
       contents: read
-      packages: write  # ESTO ES LO QUE FALTA
+      packages: write
     steps:
       - name: Checkout
         uses: actions/checkout@v6
@@ -44,13 +44,13 @@ jobs:
       - name: Tag image
         id: tag_image
         run: |
-          IMAGE=ghcr.io/xgandax/backstage-app:${{ github.sha }}
+          IMAGE=ghcr.io/Demo-xGANDAx-org/backstage-app:${{ github.sha }}
           docker tag backstage $IMAGE
           echo "IMAGE=$IMAGE" >> $GITHUB_ENV  
           echo "image=$IMAGE" >> $GITHUB_OUTPUT  
 
       - name: Login to GHCR
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u xgandax --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u Demo-xGANDAx-org --password-stdin
 
       - name: Push image
         run: |
@@ -69,6 +69,7 @@ jobs:
           AUTH_GOOGLE_CLIENT_SECRET: ${{ secrets.AUTH_GOOGLE_CLIENT_SECRET }}
           GCS_CLIENT_EMAIL: ${{ secrets.GCS_CLIENT_EMAIL }}
           GCS_PRIVATE_KEY: ${{ secrets.GCS_PRIVATE_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x k8s/secrets.sh
           ./k8s/secrets.sh

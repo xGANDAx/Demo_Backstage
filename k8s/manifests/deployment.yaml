@@ -60,6 +60,11 @@ spec:
                 secretKeyRef:
                   name: google-secrets
                   key: GCS_PRIVATE_KEY
+            - name: GITHUB_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: google-secrets
+                  key: GITHUB_TOKEN
           readinessProbe:
             httpGet:
               path: /healthcheck
